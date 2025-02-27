@@ -76,4 +76,5 @@ export default {
   getFeedbackPage, 
   createFeedback,
   getFeedbackHighlights,
+  createHighlight,
 };

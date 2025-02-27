@@ -9,6 +9,20 @@ const createFeedback = async (text: string) => {
   const feedback = await feedbackStore.createFeedback(text);
   const analysisResult = await prompt.runFeedbackAnalysis(feedback.text);
 
+  const highlightsInsertionResult = await Promise.allSettled(analysisResult?.highlights?.map(result => 
+    feedbackStore.createHighlight({
+      feedbackId: feedback.id,
+      highlightSummary: result.summary,
+      highlightQuote: result.quote,
+    })
+  ));
+
+  highlightsInsertionResult.forEach(value => {
+    if (value.status === 'rejected') {
+      console.log(value.reason);
+    }
+  });
+
   return feedback;
 }
 
