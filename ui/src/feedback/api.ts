@@ -3,11 +3,11 @@ import {gql, request} from "graphql-request";
 export type Feedback = {
   id: number
   text: string
+  highlights: Highlight[]
 }
 
 export type Highlight = {
   id: number;
-  feedbackId: number;
   summary: string;
   quote: string;
 }
@@ -27,6 +27,11 @@ const feedbacksDocument = gql`
       values {
         id
         text
+        highlights {
+          id
+          summary
+          quote
+        }
       }
       count
     }
