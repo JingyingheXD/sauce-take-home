@@ -7,6 +7,8 @@ import prompt from "../ai/prompt";
  */
 const createFeedback = async (text: string) => {
   const feedback = await feedbackStore.createFeedback(text);
+  // TODO[bonus]: add "status" to the feedback table to indicate the highlights generated status - Pristine, Pending, Rejected, Completed;
+  // don't need to await GPT returned data; 
   const analysisResult = await prompt.runFeedbackAnalysis(feedback.text);
 
   const highlightsInsertionResult = await Promise.allSettled(analysisResult?.highlights?.map(result => 

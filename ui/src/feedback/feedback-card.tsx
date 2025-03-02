@@ -19,6 +19,10 @@ export default function FeedbackCard(props: { feedback: Feedback}) {
       </p>
       {isListOpen && (
         <div className="flex flex-col align-middle">
+          {/* 
+            TODO[bonus]: display highlights based on different generated statuses in the feedback;
+            may need to add "re-generate" button for 'Rejected' status
+           */}
           {highlights?.length > 0 ? (
             highlights.map(highlight => (
               <li key={highlight.id} className="flex flex-row p-4">
