@@ -94,9 +94,14 @@ export default function FeedbackList() {
 
       <div className="space-y-6">
         <h2 className="text-l text-white font-semibold">Feedback list</h2>
-        {feedbacks.map((feedback) => (
-          <FeedbackCard feedback={feedback} key={feedback.id}></FeedbackCard>
-        ))}
+        {feedbacks?.length > 0 ? (
+          feedbacks.map((feedback) => (
+            <FeedbackCard feedback={feedback} key={feedback.id}></FeedbackCard>
+          ))
+        ) : (
+          <p className="text-gray-500">There is no feedback.</p>
+        )}
+
       </div>
 
       <Pagination 
