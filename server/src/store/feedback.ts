@@ -77,4 +77,5 @@ export default {
   createFeedback,
   getFeedbackHighlights,
   createHighlight,
+  countFeedback,
 };

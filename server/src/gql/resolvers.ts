@@ -12,6 +12,9 @@ const resolvers = {
     feedbacks: (parent: unknown, args: { page: number; per_page: number }) => {
       return feeedbackService.getFeedbackPage(args.page, args.per_page)
     },
+    totalCount: (parent: unknown, args: {}) => {
+      return feedbackStore.countFeedback()
+    }
   },
   Mutation: {
     createFeedback: (parent: unknown, args: { text: string }) => {
