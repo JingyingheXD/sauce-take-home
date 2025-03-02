@@ -15,6 +15,7 @@ export default function FeedbackList() {
   const [feedbackText, setFeedbackText] = useState('');
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [inputErrorMessage, setInputErrorMessage] = useState('');
 
   useEffect(() => {
     feedbacksQuery(page, PER_PAGE).then((result) => {
@@ -25,6 +26,13 @@ export default function FeedbackList() {
 
   const submitFeedback = async() => {
     setIsSubmitting(true);
+    setInputErrorMessage('');
+
+    if (feedbackText.trim().length < 5) {
+      setInputErrorMessage('Text must be at least 5 characters long.');
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
       await createFeedbackQuery(feedbackText);
@@ -59,8 +67,12 @@ export default function FeedbackList() {
           placeholder="Please input a feedback text..."
           value={feedbackText}
           onChange={e => setFeedbackText(e.target.value)}
+          disabled={isSubmitting}
           className="block w-full p-4 mt-3 text-gray-900 rounded-lg"
         />
+        {inputErrorMessage && (
+          <p className="text-red-500 text-sm mt-2">{inputErrorMessage}</p>
+        )}
         <button
           onClick={submitFeedback}
           disabled={isSubmitting}
