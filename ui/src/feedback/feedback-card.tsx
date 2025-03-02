@@ -19,15 +19,19 @@ export default function FeedbackCard(props: { feedback: Feedback}) {
       </p>
       {isListOpen && (
         <div className="flex flex-col align-middle">
-          {highlights.map(highlight => (
-            <li key={highlight.id} className="flex flex-row p-4">
-              <span className="text-lg mr-2 text-red-200">•</span>
-              <div>
-                <p className="font-semibold text-red-200">{highlight.summary}</p>
-                <p className="text-gray-500 italic">"{highlight.quote}"</p>
-              </div>
-            </li>
-          ))}
+          {highlights?.length > 0 ? (
+            highlights.map(highlight => (
+              <li key={highlight.id} className="flex flex-row p-4">
+                <span className="text-lg mr-2 text-red-200">•</span>
+                <div>
+                  <p className="font-semibold text-red-200">{highlight.summary}</p>
+                  <p className="text-gray-500 italic">"{highlight.quote}"</p>
+                </div>
+              </li>
+            ))
+          ) : (
+            <p className="text-gray-500">This feedback has no generated highlights.</p>
+          )}
         </div>
       )}
       {!isListOpen && (
