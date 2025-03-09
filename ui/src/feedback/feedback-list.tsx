@@ -7,23 +7,22 @@ import FeedbackCard from "./feedback-card.tsx";
 export default function FeedbackList() {
   const PER_PAGE = 3;
 
-  const [page, setPage] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
-
-  const totalPages = Math.max(Math.ceil(totalCount/PER_PAGE), 1);
-
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [feedbackText, setFeedbackText] = useState('');
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [inputErrorMessage, setInputErrorMessage] = useState('');
 
+  const totalCount = feedbacks.length;
+
+  const fetchFeedbacks = async (page: number) => {
+    const result = await feedbacksQuery(page, PER_PAGE);
+    setFeedbacks(result.feedbacks.values);
+  };
+
   useEffect(() => {
-    feedbacksQuery(page, PER_PAGE).then((result) => {
-      setFeedbacks(result.feedbacks.values);
-      setTotalCount(result.totalCount);
-    });
-  }, [page]);
+    fetchFeedbacks(1);
+  }, []);
 
   const submitFeedback = async() => {
     setIsSubmitting(true);
@@ -37,24 +36,14 @@ export default function FeedbackList() {
 
     try {
       await createFeedbackQuery(feedbackText);
-      setIsSubmitting(false);
     } catch(e) {
       console.error('insertion error: ', e);
     }
 
     setFeedbackText('');
-    setPage(1);
+    fetchFeedbacks(1);
 
-    const feedbacksDocument = await feedbacksQuery(page, PER_PAGE);
-    setFeedbacks(feedbacksDocument.feedbacks.values);
-    setTotalCount(feedbacksDocument.totalCount);
-  };
-
-  const setPreviousPage = () => {
-    setPage(prevValue => Math.max(prevValue - 1, 1))
-  };
-  const setNextPage = () => {    
-    setPage(prevValue => Math.min(prevValue+1, totalPages))
+    setIsSubmitting(false);
   };
 
   return (
@@ -105,10 +94,9 @@ export default function FeedbackList() {
       </div>
 
       <Pagination 
-        page={page} 
-        totalPages={totalPages} 
-        onPrevious={setPreviousPage}
-        onNext={setNextPage}
+        totalCount={totalCount}
+        perPage={PER_PAGE}
+        onPageChange={fetchFeedbacks}
       ></Pagination>
 
     </div>
