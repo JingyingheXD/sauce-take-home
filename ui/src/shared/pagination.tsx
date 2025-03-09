@@ -1,11 +1,26 @@
+import { useState } from "react";
+
 export default function Pagination(props: PaginationProps) {
-  const { page, totalPages, onPrevious, onNext } = props;
+  const { totalCount, perPage, onPageChange } = props;
+
+  const [page, setPage] = useState(1);
+
+  const totalPages = Math.max(Math.ceil(totalCount/perPage), 1);
+
+  const setPreviousPage = () => {
+    setPage(prevValue => Math.max(prevValue - 1, 1));
+    onPageChange(page);
+  };
+  const setNextPage = () => {    
+    setPage(prevValue => Math.min(prevValue+1, totalPages));
+    onPageChange(page);
+  };
 
   return (
     <div className="flex flex-col gap-2 pt-4">
       <div className="flex flex-row justify-end gap-4">
         <button 
-          onClick={onPrevious}
+          onClick={setPreviousPage}
           disabled={page === 1}
           className="flex items-center justify-center px-3 h-8 text-sm font-medium 
                   text-gray-500 bg-white border border-gray-300 rounded-lg 
@@ -17,7 +32,7 @@ export default function Pagination(props: PaginationProps) {
           Previous
         </button>
         <button
-          onClick={onNext}
+          onClick={setNextPage}
           disabled={page >= totalPages}
           className="flex items-center justify-center px-3 h-8 text-sm font-medium 
                   text-gray-500 bg-white border border-gray-300 rounded-lg 
@@ -37,8 +52,7 @@ export default function Pagination(props: PaginationProps) {
 }
 
 interface PaginationProps {
-  page: number;
-  totalPages: number;
-  onPrevious: () => void;
-  onNext: () => void;
+  totalCount: number;
+  perPage: number;
+  onPageChange: (page: number) => void;
 }
